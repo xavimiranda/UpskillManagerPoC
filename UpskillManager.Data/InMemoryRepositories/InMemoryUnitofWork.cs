@@ -8,7 +8,8 @@ namespace UpskillManager.Data
 {
     public class InMemoryUnitOfWork : IUnitOfWork
     {
-
+        public IAlunosRepository Alunos { get; private set;  }
+        
         public InMemoryUnitOfWork(IAlunosRepository alunos)
         {
             this.Alunos = alunos;

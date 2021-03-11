@@ -38,7 +38,6 @@ namespace UpskillManager.UI
             //UnitOfWork and Repositories 
             services.AddScoped<IUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IAlunosRepository, InMemoryAlunoRepository>();
-            services.AddScoped<ICursoRepository, CursoRepository>();
 
             //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
