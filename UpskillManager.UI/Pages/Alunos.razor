@@ -1,0 +1,84 @@
+﻿@page "/alunos"
+@using UpskillManager.Data
+@using UpskillManager.Data.Models
+@using UpskillManager.UI.Models
+
+@inject IUnitOfWork unitOfWork
+
+<h4>Inserir</h4>
+<EditForm class="col-3 my-2" Model="@newAluno" OnValidSubmit="@InsertAluno">
+    <DataAnnotationsValidator />
+
+    <label for="nome">Nome</label>
+    <InputText class="form-control" id="nome" @bind-Value="@newAluno.Nome" />
+    <ValidationMessage For=@( () => newAluno.Nome) />
+
+
+    <label for="cc">Cartão cidadao</label>
+    <InputText class="form-control" id="cc" @bind-Value="@newAluno.CC" />
+    <ValidationMessage For=@( () => newAluno.CC) />
+
+    <label for="dataNascimento">Data de Nascimento</label>
+    <InputDate class="form-control" id="dataNascimento" @bind-Value="@newAluno.DataNascimento" />
+    <ValidationMessage For=@( () => newAluno.DataNascimento) />
+
+    <button type="submit" class="btn btn-primary my-1">Inserir</button>
+</EditForm>
+<h4>Alunos</h4>
+<table class="table table-striped">
+    <tbody>
+        @foreach (var aluno in alunos)
+        {
+            <tr>
+                <td>
+                    @aluno.Id
+                </td>
+                <td>
+                    @aluno.Nome
+                </td>
+                <td>
+                    @aluno.DataNascimento.ToShortDateString()
+                </td>
+                <td>
+                    <a class="btn btn-outline-danger" @onclick="@(() => DeleteAluno(aluno))">
+                        Apagar
+                    </a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+@code {
+
+    private AlunoViewModel newAluno { get; set; } = new AlunoViewModel();
+
+    private List<Aluno> alunos;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        alunos = unitOfWork.Alunos.GetAll().ToList();
+
+    }
+
+    private void InsertAluno()
+    {
+        var aluno = new Aluno
+        {
+            Nome = newAluno.Nome,
+            CC = newAluno.CC,
+            DataNascimento = newAluno.DataNascimento
+        };
+        unitOfWork.Alunos.Add(aluno);
+        alunos.Add(aluno);
+        newAluno = new AlunoViewModel();
+    }
+
+    private void DeleteAluno(Aluno aluno)
+    {
+        unitOfWork.Alunos.Remove(aluno);
+        alunos.RemoveAt(alunos.IndexOf(aluno));
+    }
+}
